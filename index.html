@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        let HOST = location.origin.replace(/^http/, 'ws');
+        let ws = new WebSocket(HOST);
+        let el;
+
+        ws.onmessage = (event) => {
+            let messageElem = document.createElement('div');
+            messageElem.textContent = event.data;
+            document.getElementById('server-time').append(messageElem);
+        };
+    </script>
+</head>
+
+<body>
+    <p id="server-time"></p>
+
+    <form name="publish">
+        <input type="text" name="message" maxlength="50" id="msg" />
+        <input type="submit" value="Send" />
+    </form>
+
+    <script>
+        document.forms.publish.onsubmit = function () {
+            let outgoingMessage = this.message.value;
+
+            ws.send(outgoingMessage);
+            msg.value = ""
+            return false;
+        };
+    </script>
+</body>
+
+</html>
